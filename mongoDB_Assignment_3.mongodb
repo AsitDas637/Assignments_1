@@ -1,0 +1,100 @@
+//Asit Kumar Das
+db
+use ('restarunat')
+db.createCollection('addresses')
+
+//Write a MongoDB query to display all the documents in the collection
+db.addresses.find()
+
+//Write a MongoDB query to display the fields restaurant_id, name, borough, and cuisine for all the documents in the collection restaurant.
+db.addresses.find({},{"restaurant_id" : 1, "name" : 1, "borough" : 1 , "cuisine" : 1})
+
+//Write a MongoDB query to display the fields resturant_id, name, borough and cuisine for all the documents in the collection resturant.
+db.addresses.find({},{"restaurant_id" : 1, "name" : 1, "borough" : 1 , "zipcode" : 1, "_id" : 0})
+
+//Write a MongoDB query to display the first 5 resturant which is in the borough Bronx.
+db.addresses.find({"borough" : "Bronx"}).limit(5)
+
+//Write a MongoDB query to display all the resturant which is in the borough Bronx.
+db.addresses.find({"borough" : "Bronx"})
+
+//Write a MongoDB query to display the next 5 resturants after skipping first 5 which are in the borough Bronx.
+db.addresses.find({"borough" : "Bronx"}).skip(5).limit(5)
+
+//Write a MongoDB query to find the resturants who achieved a score more than 90.
+db.addresses.find({grades : {$elemMatch : {"score": {$gt : 90}}}})
+
+
+//Write a MongoDB query to find the resturants that achieved a score, more than 80 but less than 100.
+db.addresses.find({grades : {$elemMatch : {"score": {$gt : 80, $lt :100 }}}})
+
+//Write a MongoDB query to find the resturants which locate in latitude value less than -95.754168
+ db.addresses.find({"addresses.coord": {$lt : -95.754168}})
+
+//Write a MongoDB query to find the resturats that do not prepare any cuisine of 'American' and their grade score more than 70 and latitude less than -65.754168.
+// db.addresses.find ({$and:[{"cuisine":{$ne : "American"}},
+// {"grades.score":{$gt : 70}},
+// {"addresses.coord":{$lt : -65.754168}}]})
+
+//Write a Mongodb query to find the resturants which do not prepare any cuisine of 'American' and achieved a score more than 70 and located in the longitude leass tha -65.754168.
+db.addresses.find({$and:[{cuisine:{$ne:"American"}},{"grades.score":{$gt:70}},{"address.coord.1":{$lt: 65.754168}}]})
+
+//Write a MongoDB query to find the resturants which do not prepare any cuisine of 'American' and achived a grade point 'A' not belongs to the borough Brooklyn. The document must be displayed according to the cuisine in desending order.
+db.addresses.find({$and:[{cuisine:{$ne:"American"}},{"grades.grade":"A"},{borough:{$ne:"Brooklyn"}}]}).sort({cuisine:-1})
+
+//Write a MongoDB query to find the resturant Id, name, borough and cuisine for those resturants which contain 'Wil' as first three letters for its name.
+db.addresses.find({name:/^Wil/},{restaurant_id:1,name:1,borough:1,cuisine:1})
+
+//Write a MongoDB query to find the resturant Id, name, borough and cusine for those resturants which contain 'ces' as last three letters for its name.
+db.addresses.find({name:/ces$/},{restaurant_id:1,name:1,borough:1,cuisine:1})
+
+//Write a MongoDB query to find the resturant Id, name, borough and cuisine for those resturants which contain 'Reg' as three letters somewhere in its name.
+db.addresses.find({name:{$regex:"Reg"}},{restaurant_id:1,name:1,borough:1,cuisine:1})
+
+//Write a MongoDB query to find the resturants which belongs to the borough Bronx and prepared either American or Chinese dish.
+db.addresses.find({$and:[{borough:"Bronx"},{$or:[{cuisine:"American"},{cuisine:"Chinese"}]}]})
+
+//Write a MongoDB query to find the resturant Id, name, borough and cuisine for those resturants which belong to borough Staten Island or Queend or Bronxor Brooklyn.
+db.addresses.find({borough:{$in:["Staten Island","Queens","Bronx","brooklyn"]}},{restaurant_id:1,borough:1,cuisine:1})
+
+//Write a MongoDB query to find the resturant Id, name, borough and cuisine for those resturants which are not belonging to the borough Staten Island or Queens or Bronxor Brooklyn.
+db.addresses.find({borough:{$ne:["Staten Island","Queens","Bronx","brooklyn"]}},{restaurant_id:1,name:1,borough:1,cuisine:1})
+
+//Write a MongoDB query to find the resturant Id, name, borough and cuisine for those resturants which achived a score which is not more than 10.
+db.addresses.find({"grades.score":{$not:{$gt:10}}},{restaurant_id:1,name:1,borough:1,cuisine:1})
+
+//Write a MongoDB query to find the resturant Id, name, borough and cuisine for those resturants which prepared dish except 'AMerican' and 'Chinees' or resturant's name begins with letter 'Wil'.
+db.addresses.find({$or:[{$and:[{cuisine:{$ne:"American"}},{cuisine:{$ne:"Chinese"}}]},{name:"/^Wil/"}]},{restaurent_id:1,name:1,borough:1,cuisine:1})
+
+//Write a MongoDB query to find the resturant Id, name, and grades for those resturants which achived a grade of "A" and scored 11 on an ISODate "2014-08-11T00:00:00Z" among many of survey dates.
+db.addresses.find({$and:[{"grades.grade":"A"},{"grades.score":11},{"grades.date":ISODate("2014-08-11T00:00:00Z")}]},{restaurant_id:1,name:1,grades:1})
+
+//Write a MongoDb query to find the resturant Id, name and grades for those resturants where the 2nd element of grades array contains a grade of "A" and score 9 on an ISODate "2014-08-11T00:00:00Z"
+db.addresses.find({$and:[{"grades.1.grade":"A"},{"grades.1.score":9},{"grades.1.date":ISODate("2014-08-11T00:00:00Z")}]},{restaurant_id:1,name:1,grades:1})
+
+//Write a MongoDb query to find the resturant Id, name, address and geographical location for those resturants where 2nd element of coord array contains a value which is more than 42 and upto 52.
+db.addresses.find({"addresses.coord.1":{$gt:42,$lte:52}},{restaurant_id:1,name:1,addresses:1,coord:1})
+
+//Write a MongoDB query to arrange the name of tehh resturants in ascending order along with all the columns.
+db.addresses.find().sort({name:1})
+
+//Write a MongoDB query to arrange the name of the name of the resturants in descending along with all the columns.
+db.addresses.find().sort({name:-1})
+
+//Write a MongoDB query to arranged the name of the cuisine in ascending order and for that same cuisine borough should be in descending order.
+db.addresses.find().sort({cuisine:1,borough:-1})
+
+//Write a MongoDB query to know whether all the addresses contains the street on not.
+db.addresses.find({"addresses.street":{$exists:true}})
+
+//Write a MongoDB query which will select all documents in the resturants collection where the coord field value is Double.
+db.addresses.find({"addresses.coord":{$type:1}})
+
+//Write a MongoDB query which will select the resturant Id, name and grades for those restaurant which returns 0 as a remainder after dividing the score by 7.
+db.addresses.find({"grades.score":{$mod:[7,0]}},{restaurantid:1,name:1,grades:1})
+
+//Write a MongoDB query to find the resturant name, borough, longitude and attitude and cuisine for those resturants which contains 'mon' as three letters somewhere in its name.
+db.addresses.find({name:{$regex:"mon"}},{name:1,borough:1,"addresses.coord":1,cuisine:1})
+
+//Write a MongoDB query to find the restaurant name, borough, longitude and latitude and cuisine for those restaurants which contain 'Mad' as first three letters of its name.
+db.addresses.find({name:/^Mad/},{name:1,borough:1,"addresses.coord":1,cuisine:1})
